@@ -1,0 +1,96 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<parent>
+<groupId/>
+<artifactId/>
+<version>0.0.1-SNAPSHOT</version>
+</parent>
+<properties>
+<version.project>1.2.1</version.project>
+</properties>
+<artifactId/>
+<!--  TODO Modificar nombre de proyecto-ear  -->
+<packaging>ear</packaging>
+<name/>
+<!--  TODO Modificar nombre de proyecto  -->
+<description>This is the EAR POM file</description>
+<dependencies>
+<dependency>
+<groupId>${project.groupId}</groupId>
+<artifactId/>
+<!--  TODO Modificar nombre de proyecto-ejb  -->
+<type>ejb</type>
+</dependency>
+<!--  Depend on the EJB module and WAR so that we can package them  -->
+<dependency>
+<groupId>${project.groupId}</groupId>
+<artifactId/>
+<!--  TODO Modificar nombre de proyecto-web  -->
+<type>war</type>
+</dependency>
+<dependency>
+<groupId>${project.groupId}</groupId>
+<artifactId/>
+<!--  TODO Modificar nombre de proyecto-commons  -->
+<type>jar</type>
+</dependency>
+</dependencies>
+<build>
+<finalName>${project.parent.artifactId}-${version.project}</finalName>
+<plugins>
+<!-- EAR plugin: format of output file  -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-ear-plugin</artifactId>
+<version>${version.ear.plugin}</version>
+<configuration>
+<!--  Tell Maven we are using Jakarta EE  -->
+<version>10</version>
+<!--  Use Jakarta EE ear libraries as needed. Jakarta EE ear libraries
+                        are in easy way to package any libraries needed in the ear, and automatically
+                        have any modules (EJB-JARs and WARs) use them  -->
+<defaultLibBundleDir>lib</defaultLibBundleDir>
+<modules>
+<!--  Default context root of the web app is /${rootArtifactId}-web.
+	                        If a custom context root is needed, uncomment the following snippet to
+	                        register our War as a web module and set the contextRoot property  -->
+<ejbModule>
+<groupId>${project.groupId}</groupId>
+<artifactId/>
+<!--  TODO Modificar nombre de proyecto-ejb -->
+</ejbModule>
+<webModule>
+<groupId>${project.groupId}</groupId>
+<artifactId/>
+<!--  TODO Modificar nombre de proyecto-web -->
+<contextRoot>/</contextRoot>
+</webModule>
+</modules>
+<outputFileNameMapping>@{artifactId}@@{dashClassifier?}@.@{extension}@</outputFileNameMapping>
+<!--  Esto se agrega porque en la versión 27.0.1 de Wildfly tiene problemas con el ojdbc 42.2.6 y marca un WARN:
+                    	WARN  [org.hibernate.dialect.PostgreSQLPGObjectJdbcType] (ServerService Thread Pool 80) PostgreSQL JDBC driver classes are inaccessible and thus,
+                    	certain DDL types like JSONB, JSON, GEOMETRY can not be used!: java.lang.ClassNotFoundException:
+                    	org.postgresql.util.PGobject from [Module "org.hibernate... "
+                      -->
+<archive>
+<manifestEntries>
+<Dependencies>org.postgresql</Dependencies>
+</manifestEntries>
+</archive>
+</configuration>
+</plugin>
+<!--  The WildFly plug-in deploys your ear to a local WildFly / JBoss EAP container.
+                Due to Maven's lack of intelligence with EARs we need to configure
+                the WildFly Maven plug-in to skip deployment for all modules. We then enable
+                it specifically in the ear module.  -->
+<plugin>
+<groupId>org.wildfly.plugins</groupId>
+<artifactId>wildfly-maven-plugin</artifactId>
+<configuration>
+<!--  TODO En la version anterior aqui se declaraba el nombre del ear  -->
+<skip>false</skip>
+</configuration>
+</plugin>
+</plugins>
+</build>
+</project>

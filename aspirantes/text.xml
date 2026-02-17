@@ -6,6 +6,7 @@
 <version>0.0.1-SNAPSHOT</version>
 </parent>
 <properties>
+	<version.project>1.2.1</version.project>
 </properties>
 <artifactId/>
 <!--  TODO Modificar nombre de proyecto-ear  -->
